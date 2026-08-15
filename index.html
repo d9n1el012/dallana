@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Dallana ❤️</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      max-width: 400px;
+      width: 90%;
+      position: relative;
+    }
+
+    h1 {
+      color: #e63946;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Botón Siguiente (Flecha) */
+    .btn-next {
+      background-color: #ff4b2b;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      font-size: 1.1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4);
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .btn-next:hover {
+      background-color: #ff416c;
+      transform: scale(1.05);
+    }
+
+    /* Botones Sí y No */
+    .buttons-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 1.5rem;
+      position: relative;
+      min-height: 60px;
+    }
+
+    .btn-yes {
+      background-color: #2ec4b6;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      font-size: 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(46, 196, 182, 0.4);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.27);
+      z-index: 10;
+    }
+
+    .btn-no {
+      background-color: #e63946;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      font-size: 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      position: absolute;
+      transition: all 0.3s ease;
+    }
+
+    /* Pantalla Final de Celebración */
+    #final-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ff4b2b;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+
+    #final-screen.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #final-screen h2 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <!-- Paso 1 -->
+    <div id="step1">
+      <h1>Dallana, te amo ❤️</h1>
+      <button class="btn-next" onclick="nextStep()">Siguiente ➔</button>
+    </div>
+
+    <!-- Paso 2 -->
+    <div id="step2" class="hidden">
+      <h1>¿Tú me amas a mí? 🥺</h1>
+      <div class="buttons-container">
+        <button id="btnYes" class="btn-yes" onclick="handleYes()">Sí 💕</button>
+        <button id="btnNo" class="btn-no" onmouseover="moveNo()" onclick="moveNo()">No 💔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pantalla de Éxito al Aceptar -->
+  <div id="final-screen">
+    <h2>¡Sabía que sí! 😍💖</h2>
+    <p style="font-size: 1.5rem;">¡Eres lo mejor que me ha pasado!</p>
+  </div>
+
+  <script>
+    let yesScale = 1;
+
+    function nextStep() {
+      document.getElementById('step1').classList.add('hidden');
+      document.getElementById('step2').classList.remove('hidden');
+      
+      // Posiciona el botón "No" junto al "Sí" inicialmente
+      const btnNo = document.getElementById('btnNo');
+      btnNo.style.right = '20px';
+    }
+
+    function moveNo() {
+      const btnNo = document.getElementById('btnNo');
+      const btnYes = document.getElementById('btnYes');
+
+      // 1. Aleja el botón "No" haciéndolo escapar a una posición aleatoria
+      const maxX = window.innerWidth - 120;
+      const maxY = window.innerHeight - 60;
+      
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+
+      btnNo.style.position = 'fixed';
+      btnNo.style.left = randomX + 'px';
+      btnNo.style.top = randomY + 'px';
+
+      // 2. Hace que el botón "Sí" crezca en cada intento de tocar el "No"
+      yesScale += 0.45;
+      btnYes.style.transform = `scale(${yesScale})`;
+
+      // Si el botón "Sí" ya es gigantesco, cubre la pantalla automáticamente
+      if (yesScale > 12) {
+        handleYes();
+      }
+    }
+
+    function handleYes() {
+      document.getElementById('final-screen').classList.add('active');
+    }
+  </script>
+</body>
+</html>
